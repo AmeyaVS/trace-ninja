@@ -1,2 +1,2 @@
 # trace-ninja
-Tracing function call for C/C++ application
+Tracing function calls for C/C++ application
