@@ -1,2 +1,4 @@
 # no object files
 *.[oa]
+# do not add temporary files
+*~
