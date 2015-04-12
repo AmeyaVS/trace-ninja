@@ -1,0 +1,4 @@
+The file references.txt contains the refernces for generating 
+call-graph/tracing function calls in C/C++ Application build
+in debugging with -finstrumenst-functions with gcc/g++ compiler.
+
