@@ -2,3 +2,16 @@ http://www.mtjones.com/developerworks/pvtrace.zip
 http://www.logix.cz/michal/devel/CygProfiler/
 http://www.logix.cz/michal/devel/CygProfiler/cyg-profile.tar.gz
 
+https://balau82.wordpress.com/2010/10/06/trace-and-profile-function-calls-with-gcc/
+http://linuxgazette.net/151/melinte.html
+http://linuxgazette.net/151/misc/melinte/all.tgz
+http://codingrelic.geekhold.com/2010/09/gcc-function-instrumentation.html
+http://michael.hinespot.com/tutorials/gcc_trace_functions
+
+http://highlandsun.com/hyc/#fncchk
+http://highlandsun.com/hyc/fncchk154.tgz
+
+http://sourceforge.net/projects/fnccheck/
+http://yannickperret.free.fr/index.php?lng=fr&page=moi
+
+http://www.cplusplusdevelop.com/740_17820344/
