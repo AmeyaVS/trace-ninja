@@ -5,13 +5,18 @@
 
 void usage(const char* pgName) {
   fprintf(stderr, "Usage: %s -t <binary_trace_file> -s <symbol_mapping_file> -o <output file>\n", pgName);
-  fprintf(stderr, "Options:\n\t-t <binary_trace_file>: Path to the binray trace file generated.\n\t-s <symbol_mapping_file>: Symbol mapping file created from nm/addr2line tool.\n\t-o <output file>: Output File in JSON format for Chrome about:tracing tool. Optional in-case the option is missing stdout will be used to spit out the traces.\n\t-h help: This help.\n");
+  fprintf(stderr, "Options:\n"
+                  "\t-t <binary_trace_file>: Path to the binray trace file generated.\n"
+                  "\t-s <symbol_mapping_file>: Symbol mapping file created from nm/addr2line tool.\n"
+                  "\t-o <output file>: Output File in JSON format for Chrome about:tracing tool. Optional in-case the option is missing stdout will be used to spit out the traces.\n"
+                  "\t-h help: This help.\n");
 }
 
 int main(int argc, char *argv[]) {
   char option = '\0';
   char *tracefile = NULL;
   char *symbfile = NULL;
+  std::vector<nm_client::nmEntry> nmDb;
   char *outFile = NULL;
   if (argc == 1) {
     goto error;
@@ -37,8 +42,11 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  if (symbfile) {
+    populateNMDb(symbfile, nmDb);
+  }
   if (tracefile) {
-    print_json(tracefile, outFile);
+    print_json(tracefile, outFile, nmDb);
   } else {
     fprintf(stderr, "Input trace file not provided!\n");
     goto error;

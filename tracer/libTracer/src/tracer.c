@@ -142,7 +142,9 @@ void __cyg_profile_func_enter(void *func, void *callsite) {
   clock_gettime(CLOCK_MONOTONIC, &tb.tInstant);
   tb.type = 'B';
   tb.func = func;
+#if CALLSITE
   tb.callsite = callsite;
+#endif // CALLSITE
   tb.currentThread = pthread_self();
   trace_write(&tb);
 }
@@ -152,7 +154,9 @@ void __cyg_profile_func_exit(void *func, void *callsite) {
   clock_gettime(CLOCK_MONOTONIC, &tb.tInstant);
   tb.type = 'E';
   tb.func = func;
+#if CALLSITE
   tb.callsite = callsite;
+#endif // CALLSITE
   tb.currentThread = pthread_self();
   trace_write(&tb);
 }

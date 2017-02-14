@@ -1,3 +1,6 @@
+#ifndef MAPPARSER_H_
+#define MAPPARSER_H_
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -32,32 +35,9 @@ namespace map_client {
     boost::optional<std::string> filePath; //< FilePath
   }; // mapEntry
 
-  std::ostream& operator<<(std::ostream& os, mapRange const& mr) {
-    os << std::hex << mr.bOffset << "-" << mr.eOffset;
-    return os;
-  }
-
-  std::ostream& operator<<(std::ostream& os, mapDev const& md) {
-    os << md.major << ":" << md.minor;
-    return os;
-  }
-
-  std::ostream& operator<<(std::ostream& os, mapEntry const& mEntry) {
-    os << mEntry.range
-       << " "
-       << mEntry.permissions
-       << " "
-       << mEntry.offset
-       << " "
-       << mEntry.dev
-       << " ";
-    os << std::dec;
-    os << mEntry.inode;
-    if (mEntry.filePath) {
-      os << mEntry.filePath;
-    }
-    return os;
-  }
+  std::ostream& operator<<(std::ostream& os, mapRange const& mr);
+  std::ostream& operator<<(std::ostream& os, mapDev const& md);
+  std::ostream& operator<<(std::ostream& os, mapEntry const& mEntry);
 } // map_client
 
 BOOST_FUSION_ADAPT_STRUCT(map_client::mapDev, major, minor);
@@ -97,39 +77,8 @@ struct MapParse : qi::grammar<It, map_client::mapEntry(), Skipper> {
   qi::rule<It, uint64_t()> num;
 }; // MapParse
 
-void mapParse(std::string const& input) {
-  using It = std::string::const_iterator;
-  MapParse<It> const mP;
 
-  It f = input.begin(), l = input.end();
-  map_client::mapEntry mData;
+void parseMapEntry(std::string const& input, std::vector<map_client::mapEntry>& mapDb);
+void populateMapDb(const char* mapFile, std::vector<map_client::mapEntry>& mapEntry);
 
-  bool ok = qi::phrase_parse(f, l, mP, qi::ascii::space, mData);
-
-  if (ok) {
-    std::cout << mData << std::endl;
-  } else {
-    std::cout << "Parser failed: (" << input << ")\n";
-  }
-
-  if (f != l) {
-    std::cout << "Remaining unparsed input: '" << std::string(f, l) << "'\n";
-  }
-}
-
-int main(int argc, char *argv[]) {
-  std::ifstream iFile;
-  if (argc == 2) {
-    iFile.open(argv[1], std::ios::in);
-    if (iFile.is_open()) {
-      std::string line;
-      while(std::getline(iFile, line)) {
-        mapParse(line);
-      }
-      iFile.close();
-    } else {
-      std::cerr << "Unable to open: " << argv[1] << std::endl;
-      exit(-1);
-    }
-  }
-}
+#endif // MAPPARSER_H_

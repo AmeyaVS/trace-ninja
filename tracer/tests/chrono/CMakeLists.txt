@@ -10,7 +10,7 @@ add_definitions(
   -Wall
   -finstrument-functions
   #-finstrument-functions-exclude-file-list='/usr/include/c++/5/chrono'
-  -finstrument-functions-exclude-file-list='/usr/include/c++/5/chrono'
+  #-finstrument-functions-exclude-file-list='/usr/include/c++/5/chrono'
   )
 
 add_executable(
