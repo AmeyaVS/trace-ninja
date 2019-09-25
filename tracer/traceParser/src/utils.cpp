@@ -26,8 +26,8 @@ static void resolve_symbol(FILE *jsonFileHandle, void* funcHandle, std::vector<m
     bool mapFound = false;
     bool symbFound = false;
     for(;bMap != eMap; ++bMap) {
-      if (((*bMap).range.bOffset >= address) && (address <= (*bMap).range.eOffset)) {
-        baseOffset = (*bMap).range.bOffset;
+      if (((*bMap).range.bOffset <= address) && (address <= (*bMap).range.eOffset)) {
+        baseOffset = (*bMap).range.bOffset - (*bMap).offset;
         if ((*bMap).filePath) {
           std::stringstream ss;
           ss << (*bMap).filePath;
