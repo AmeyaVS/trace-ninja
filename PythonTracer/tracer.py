@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 logger.propagate = False
 
 # Create file handler
-handler = logging.FileHandler(str(__file__) + '_tracing.log')
+handler = logging.FileHandler(str(__file__) + '_tracing.log', 'w')
 handler.setLevel(logging.DEBUG)
 
 # Create a logging format
@@ -32,8 +32,14 @@ def profilefunc(frame, event, arg):
     # Logger doesn't work with multithreaded Python 2.x environment.
     # It seems to be an issue with python internals.
     # Logger seems to work under Python 3.6.1
-    if 'threading.py' not in code.co_filename.lower():
-        logger.debug("%s:%d:%s:%s" %(code.co_filename, frame.f_lineno, code.co_name, event))
+    file_path = code.co_filename
+    #print(file_path)
+    if ('threading.py' not in file_path) and \
+       ('logging' not in file_path) and \
+       ('posixpath.py' not in file_path) and \
+       ('genericpath.py' not in file_path):
+        #print(file_path)
+        logger.debug("%s:%d:%s:%s" %(code.co_filename, frame.f_lineno, code.co_qualname, event))
 
 def fibo(n):
     if n == 0:
@@ -43,9 +49,24 @@ def fibo(n):
     else:
         return fibo(n - 2) + fibo(n - 1)
 
+class SomeData:
+
+    def __init__(self, msg: str):
+        self.msg = msg
+        self.count = 0
+
+    def dataprint(self):
+        print(f"{self.msg}_{self.count}")
+        testfact.fact(self.count)
+        self.count += 1
+
+
 def main():
+    d = SomeData("hello")
     for i in range(0, 20):
         print("fibo(%d): %d, fact(%d): %d" %(i, fibo(i), i, testfact.fact(i)))
+        d.dataprint()
+
 
 if __name__ == '__main__':
     #threading.setprofile(profilefunc)
@@ -53,4 +74,12 @@ if __name__ == '__main__':
     logger.info('Start Logging')
     main()
     logger.info('Closing Logging')
+    # Remove profilefunc from profiling
+    sys.setprofile(None)
+    #import cProfile
+    #with cProfile.Profile() as cp:
+    #    logger.info('Start Logging')
+    #    main()
+    #    logger.info('Closing Logging')
+    #    cp.print_stats()
 
